@@ -22,7 +22,7 @@ pipeline{
         }
         stage("run"){
             steps{
-                echo "========executing A========"
+                 sh"java -jar target/springboot-backend-0.0.1-SNAPSHOT.jar"
             }
         }
         stage("Deploy"){
