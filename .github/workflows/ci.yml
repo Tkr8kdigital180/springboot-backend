@@ -9,19 +9,6 @@ on:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
-    # Provide datasource config to point tests at the service below
-    env:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://127.0.0.1:3306/employee_management_system?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: employee_management_system
-        ports:
-          - 3306:3306
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -32,7 +19,7 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: maven
-      - name: Build 
+      - name: Build
         run: mvn clean package -DskipTests=true
 
       - name: Test
@@ -40,10 +27,7 @@ jobs:
 
       - name: Run Application
         run: |
-           java -jar target/springboot-backend-0.0.1-SNAPSHOT.jar&
-           echo "Application is running"
+           nohup java -jar target/springboot-backend-0.0.1-SNAPSHOT.jar
+           echo "Application started"
       - name: Deploy
         run: echo "Deploy"
-
-
-
