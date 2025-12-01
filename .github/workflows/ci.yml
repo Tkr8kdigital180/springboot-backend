@@ -22,11 +22,6 @@ jobs:
           MYSQL_DATABASE: employee_management_system
         ports:
           - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -37,22 +32,11 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: maven
-      - name: Build (package, skip tests)
-        run: mvn -B clean package -DskipTests=true
-
-      - name: Wait for MySQL to be ready
-        run: |
-          echo "Waiting for MySQL to accept connections..."
-          for i in {1..30}; do
-            if bash -c "echo > /dev/tcp/127.0.0.1/3306" >/dev/null 2>&1; then
-              echo "MySQL is reachable"
-              break
-            fi
-            echo "Waiting... ($i)"; sleep 2
-          done
+      - name: Build 
+        run: mvn clean package -DskipTests=true
 
       - name: Test
-        run: mvn -B test
+        run: mvn test
 
       - name: Run Application
         run: |
